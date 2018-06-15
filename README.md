@@ -9,3 +9,7 @@
 ### version 0.0  date--20180613
 	
 	mkdir
+
+### version 0.1  date--20180615
+	
+	生成ripepage.lib、offset.lib
