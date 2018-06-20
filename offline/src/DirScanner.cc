@@ -18,7 +18,7 @@ using namespace MSE;
 DirScanner::DirScanner(Configuration & conf)
 : _conf(conf)
 {
-	traverse(_conf.getConfigMap()["xml_files_path"].c_str());
+	traverse(_conf.getConfigMap()["xml_files_dir"].c_str());
 }
 
 vector<string> & DirScanner::get_files_path()

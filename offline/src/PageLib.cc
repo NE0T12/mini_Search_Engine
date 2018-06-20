@@ -54,16 +54,16 @@ void PageLib::create()
 
 void PageLib::store()
 {
-	ofstream ofs_ripepage(_conf.getConfigMap()["ripepage_lib_path"] + "/" + _conf.getConfigMap()["ripepage_lib_name"]);
-	ofstream ofs_offset(_conf.getConfigMap()["offset_lib_path"] + "/" + _conf.getConfigMap()["offset_lib_name"]);
+	ofstream ofs_ripepage(_conf.getConfigMap()["ripepage_lib_dir"] + "/" + _conf.getConfigMap()["ripepage_lib_name"]);
+	ofstream ofs_offset(_conf.getConfigMap()["offset_lib_dir"] + "/" + _conf.getConfigMap()["offset_lib_name"]);
 	if(!ofs_ripepage || !ofs_offset)
 	{
 		logInfo("ofstream open error");
 		return;
 	}
 	int page_id = 0;
-	long long int offset = 0;
-	long long int length = 0;
+	long int offset = 0;
+	long int length = 0;
 	for(auto & page : _PageLib)
 	{
 		offset = ofs_ripepage.tellp();

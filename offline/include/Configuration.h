@@ -9,10 +9,12 @@
 
 #include <string>
 #include <map>
+#include <set>
 #include <fstream>
 #include <sstream>
 using std::string;
 using std::map;
+using std::set;
 using std::ifstream;
 using std::ofstream;
 using std::istringstream;
@@ -27,10 +29,12 @@ class Configuration
 public:
 	Configuration(const string & filepath);
 	map<string, string> & getConfigMap();
+	set<string> & getStopWordList();
 
 private:
 	string _filepath;
 	map<string, string> _configMap;
+	set<string> _stopWordList;
 };
 
 } // end of namespace

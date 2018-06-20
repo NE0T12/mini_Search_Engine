@@ -9,10 +9,14 @@
 
 #include "Configuration.h"
 #include "SplitTool.h"
+#include "tinyxml2.h"
+#include "mylog.h"
 #include <map>
 #include <vector>
 #include <string>
 #include <set>
+#include <algorithm>
+#include <iterator>
 
 using std::vector;
 using std::map;
@@ -21,22 +25,33 @@ using std::string;
 
 namespace MSE
 {
+
 class WebPage
 {
+	friend bool operator == (WebPage & lhs, WebPage & rhs);	//判断两篇文档是否相等
+	friend bool operator < (WebPage & lhs, WebPage & rhs);	//对文档按Docid进行排序
 public:
-	WebPage(string & doc, Configuration & conf, SplitTool & splitTool);
+	const static int TOPK_NUMBER = 20;
+
+public:
+	WebPage(Configuration & conf, SplitTool * splitTool, string & doc);
 	int getDocId();
 	string getDoc();
 	map<string, int> & getWordsMap();
 
 private:
-	void processDoc(const string & doc);
-	void calcTopK(vector<string> & wordsVec, int k, set<string> & stopWordList);
+	void processDoc();
+	void statistic(); //统计title和content中词频
+	void push_dict(const string & word);
+	void calcTopK();
+	void make_summary(); //生成摘要
 
 private:
-	const int _TOPK_NUMBER = 20;
-	Configuration & _conf;
-	SplitTool & _splitTool;
+	//Configuration & _conf;
+	//SplitTool & _splitTool;
+	//string & _doc;
+	Configuration  _conf;
+	SplitTool * _splitTool;
 	string _doc;
 	int _docId;
 	string _docTitle;
@@ -46,6 +61,8 @@ private:
 	vector<string> _topWords; //词频最高前20词语
 	map<string, int> _wordsMap; //保存每篇文档的所有词语和词频，不包括停用词
 };
+
+
 
 
 } // end of namespace MSE

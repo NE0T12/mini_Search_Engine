@@ -13,11 +13,13 @@
 #include <vector>
 #include <unordered_map>
 #include <string>
+#include <memory>
 
 using std::unordered_map;
 using std::vector;
 using std::string;
 using std::pair;
+using std::shared_ptr;
 
 namespace MSE
 {
@@ -26,19 +28,21 @@ class PageLibPreprocessor
 {
 public:
 	PageLibPreprocessor(Configuration & conf);
+	~PageLibPreprocessor();
+	
 	void doProcess();
 
 private:
-	void readInfoFromFile();
+	void readInfoFromFile(); //根据配置信息读取网页库和位置偏移库的内容
 	void cutRedundantPages(); //对冗余网页进行去重
-	void buildInvertIndexTable();
+	void buildInvertIndexTable(); //建立倒排索引表
 	void store();
 
 private:
 	Configuration & _conf;
-	SplitToolCppjieba _splitToolCppjieba; //分词对象
+	SplitTool * _splitToolCppjieba; //分词对象
 	vector<WebPage> _pageLib;
-	unordered_map<int, pair<int, int>> _offsetLib;
+	unordered_map<int, pair<long, long>> _offsetLib; ///////////作废待定
 	unordered_map<string, vector<pair<int, double>>> _invertIndexTable; //倒排索引表
 };
 

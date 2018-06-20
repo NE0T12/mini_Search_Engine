@@ -53,6 +53,9 @@ void FileProcessor::process(const string & filepath)
 				else
 					goto NEXT;
 				
+				if(rssItem.content.size() < 100) //文章内容过短，不要
+					goto NEXT;
+
 				_rssItem_vec.push_back(rssItem);
 
 				NEXT:
