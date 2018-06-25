@@ -42,9 +42,6 @@ Configuration::Configuration(const string & filepath)
 	while(getline(ifs_stopword, line))
 	{
 		string word;
-		//istringstream iss(line);
-		//iss >> word;
-		//_stopWordList.insert(word);
 		_stopWordList.insert(line);
 	}
 	ifs_stopword.close();

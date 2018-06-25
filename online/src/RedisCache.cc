@@ -11,7 +11,7 @@ using namespace MSE;
 using std::cout;
 using std::endl;
 
-RedisCache::RedisCache(string ip, int port)
+RedisCache::RedisCache(string ip, int port, int db_num)
 : _redisContext(redisConnect(ip.c_str(), port))
 , _redisReply(NULL)
 , _redisState(1)
@@ -28,6 +28,7 @@ RedisCache::RedisCache(string ip, int port)
 		}
 		_redisState = 0;
 	}
+	redisCommand(_redisContext, "SELECT %d", db_num); //选择redis数据库
 }
 
 RedisCache::~RedisCache()

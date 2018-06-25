@@ -94,10 +94,15 @@ string WordQuery::doQuery(const string & str)
 {
 	auto query_word_vec = _splitToolCppjieba->cut(str); //将查询词句分词
 	vector<double> query_weight_vec;
+	
+	for(auto & word : *query_word_vec)
+		process_word(word); //将英文大写变小写
+	
 	bool weight_flag = false;
 	weight_flag	= get_query_words_weight_vec(*query_word_vec, query_weight_vec);
 	if(!weight_flag)
 	{
+		delete query_word_vec;
 		return returnNoAnswer();
 	}
 	else
@@ -113,6 +118,7 @@ string WordQuery::doQuery(const string & str)
 
 		return createJson(result_docId_vec, query_word);
 	}
+	delete query_word_vec;
 	return returnNoAnswer();
 }
 
@@ -225,14 +231,12 @@ string WordQuery::createJson(vector<int> & docIdVec, const vector<string> & quer
 		json_page["title"] = webpage.getDocTitle();
 		json_page["url"] = webpage.getDocUrl();
 		json_page["summary"] = webpage.getSummary();
-		//json_page["doc"] = webpage.getDoc();
 		
 		json_arr.append(json_page);
 	}
 	json_root["files"] = json_arr;
 	
 	return json_writer.write(json_root);	
-	//return returnNoAnswer();
 }
 
 string WordQuery::returnNoAnswer()
@@ -256,7 +260,6 @@ bool myCompare(pair<int, double> & lhs, pair<int, double> & rhs)
 }
 void WordQuery::get_search_result_page(vector<double> & query_weight_vec, vector<pair<int, vector<double>>> & page_vec, vector<int> & result_page_docId) //执行余弦相似度算法，获取搜索结果
 {
-	
 	vector<pair<int, double>> page_rank_vec;
 	double XY, abs_X, abs_Y, cos;
 	XY = abs_X = abs_Y = cos = 0;
@@ -288,4 +291,16 @@ void WordQuery::get_search_result_page(vector<double> & query_weight_vec, vector
 	sort(page_rank_vec.begin(), page_rank_vec.end(), myCompare);
 	for(auto & item : page_rank_vec)
 		result_page_docId.push_back(item.first);
+}
+
+void WordQuery::process_word(string & word)
+{
+	if(3 == get_bytes_size(word[0])) //中文
+		return;
+
+	for(auto & ch : word)
+	{
+		if(std::isupper(ch))
+			ch = std::tolower(ch);	
+	}
 }

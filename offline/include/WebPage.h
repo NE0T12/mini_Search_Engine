@@ -45,6 +45,7 @@ private:
 	void push_dict(const string & word);
 	void calcTopK();
 	void make_summary(); //生成摘要
+	void process_word(string & word);
 
 private:
 	//Configuration & _conf;
@@ -62,10 +63,37 @@ private:
 	map<string, int> _wordsMap; //保存每篇文档的所有词语和词频，不包括停用词
 };
 
+inline
+int get_bytes_size(char ch)
+{
+	int size = 1;
+	if(ch & (1 << 7))
+	{
+		for(int idx = 6; idx > 1; --idx)
+		{
+			if(ch & (1 << idx))
+				++size;
+			else
+				break;
+		}
+	}
+	return size;
+}
 
-
+inline
+int get_str_length(string & s)
+{
+	int len = 0;
+	int nBytes = 0;
+	for(size_t idx = 0; idx != s.size(); idx += nBytes)
+	{
+		nBytes = get_bytes_size(s.c_str()[idx]);
+		if(nBytes)
+			++len;
+	}
+	return len;
+}
 
 } // end of namespace MSE
-
 
 #endif

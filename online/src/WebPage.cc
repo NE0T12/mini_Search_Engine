@@ -117,7 +117,10 @@ void WebPage::statistic()
 	{
 		auto search = stopWordList.find(word);
 		if(search == stopWordList.end())
+		{
+			process_word(word);
 			push_dict(word);
+		}
 	}
 	delete result;
 }
@@ -165,6 +168,18 @@ string WebPage::getSummary()
 string WebPage::getDocUrl()
 {
 	return _docUrl;
+}
+
+void WebPage::process_word(string & word)
+{
+	if(3 == get_bytes_size(word[0])) //中文
+		return;
+
+	for(auto & ch : word)
+	{
+		if(std::isupper(ch))
+			ch = std::tolower(ch);	
+	}
 }
 
 } // end of namespace MSE

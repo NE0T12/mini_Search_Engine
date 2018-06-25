@@ -25,7 +25,7 @@ WordQueryServer::WordQueryServer(const string & cfgFileName)
 , _tcpserver(_conf.getConfigMap()["ip"], stoi(_conf.getConfigMap()["port"]))
 , _threadpool(stoi(_conf.getConfigMap()["thread_num"]), stoi(_conf.getConfigMap()["queue_size"]))
 , _wordQuery(_conf)
-, _redisCache(_conf.getConfigMap()["redis_connect_ip"], stoi(_conf.getConfigMap()["redis_connect_port"]))
+, _redisCache(_conf.getConfigMap()["redis_connect_ip"], stoi(_conf.getConfigMap()["redis_connect_port"]), stoi(_conf.getConfigMap()["redis_connect_db"]))
 {
 
 }
@@ -50,12 +50,6 @@ void WordQueryServer::onConnection(const TcpConnectionPtr & conn)
 void WordQueryServer::onMessage(const TcpConnectionPtr & conn)
 {
     std::string query(conn->receive());
-	size_t pos = 0; 
-	pos	= query.find("\n");
-	if(pos)	
-		query = query.substr(0, pos);
-	//cout << "query word = " << query << endl;
-	//cout << "query word size = " << query.size() << endl;
 
 	Task task(query, conn, _wordQuery, _redisCache);
 	_threadpool.addTask(std::bind(&Task::process, task));

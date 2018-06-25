@@ -48,6 +48,7 @@ private:
 	void push_dict(const string & word);
 	void calcTopK();
 	void make_summary(); //生成摘要
+	void process_word(string & word);
 
 private:
 	//Configuration & _conf;
@@ -64,6 +65,23 @@ private:
 	vector<string> _topWords; //词频最高前20词语
 	map<string, int> _wordsMap; //保存每篇文档的所有词语和词频，不包括停用词
 };
+
+inline
+int get_bytes_size(char ch)
+{
+	int size = 1;
+	if(ch & (1 << 7))
+	{
+		for(int idx = 6; idx > 1; --idx)
+		{
+			if(ch & (1 << idx))
+				++size;
+			else
+				break;
+		}
+	}
+	return size;
+}
 
 } // end of namespace MSE
 

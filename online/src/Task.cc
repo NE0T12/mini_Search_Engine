@@ -24,7 +24,10 @@ Task::Task(const string & query, const TcpConnectionPtr & conn, WordQuery & word
 , _wordQuery(wordQuery)
 , _redisCache(cache)
 {
-
+	size_t pos = 0; 
+	pos	= _query.find("\n");
+	if(pos)	
+		_query = _query.substr(0, pos);
 }
 
 void Task::process()
@@ -38,12 +41,12 @@ void Task::process()
 	
 //	//1. 先到缓存中查找
 	bool flag = false;
-//	if(_redisCache.get_redis_state())
-//	{
-//		flag = query_in_cache();
-//	}
+	if(_redisCache.get_redis_state())
+	{
+		flag = query_in_cache();
+	}
 
-	//2. 若缓存中没找到，再到词典中查找
+	//2. 若缓存中没找到，再到库中查找
 	if(!flag)
 	{
 		query_in_lib();
@@ -52,47 +55,29 @@ void Task::process()
 
 void Task::query_in_lib()
 {
-	string s = _wordQuery.doQuery(_query);
-	cout << s << endl;
-	_conn->sendInLoop(s);
+	string res = _wordQuery.doQuery(_query);
+	_conn->sendInLoop(res);
 	//_conn->sendInLoop(_wordQuery.doQuery(_query));
 
-
-//	//1. 得到词典/索引   (方法一：通过单例模式)
-//
-//	//2...再做处理
-//
-//	//3. 将候选词放到优先级队列
-//
-//
-//	//4. 取优先级队列中的前K个词作为返回给客户端的结果
-//	//cout << "_result_priority_que.size = " << _result_priority_que.size() << endl;
-//
-//
-//	//5. 将结果保存到cache中
-//	if(_redisCache.get_redis_state())
-//		_redisCache.set_redis_cache(_query, candidate_res);
-//
-//	//6. 返回结果给客户端
-//	_conn->sendInLoop(candidate_res);
-//
-//	delete res; //释放内存
-//	res = NULL;
+	//将结果保存到cache中
+	if(_redisCache.get_redis_state())
+		_redisCache.set_redis_cache(_query, res);
 }
 
-//bool Task::query_in_cache()
-//{
-//	string res = _redisCache.get_cache_result(_query);
-//	if(res == string())
-//	{
-//		return false;
-//	}
-//	else
-//	{
-//		_conn->sendInLoop(res);
-//		return true;
-//	}
-//}
+bool Task::query_in_cache()
+{
+	string res = _redisCache.get_cache_result(_query);
+	if(res == string())
+	{
+		return false;
+	}
+	else
+	{
+		//cout << "redis" << endl;
+		_conn->sendInLoop(res);
+		return true;
+	}
+}
 
 
 //bool Task::check_input()

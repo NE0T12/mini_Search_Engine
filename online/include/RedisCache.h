@@ -17,7 +17,7 @@ namespace MSE
 class RedisCache
 {
 public:
-	RedisCache(string ip = "127.0.0.1", int port = 6379);
+	RedisCache(string ip = "127.0.0.1", int port = 6379, int db_num = 2);
 	~RedisCache();
 
 	redisReply * get_redis_reply(string query);

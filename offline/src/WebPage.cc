@@ -6,6 +6,7 @@
  
 #include "../include/WebPage.h"
 #include <algorithm>
+#include <cctype>
 
 using namespace MSE;
 using namespace tinyxml2;
@@ -101,7 +102,7 @@ void WebPage::processDoc()
 
 		statistic(); //统计词频
 		calcTopK(); //获取词频最高TopK
-		make_summary(); //生成摘要
+		//make_summary(); //生成摘要
 	}
 	else
 	{
@@ -117,7 +118,10 @@ void WebPage::statistic()
 	{
 		auto search = stopWordList.find(word);
 		if(search == stopWordList.end())
+		{
+			process_word(word);
 			push_dict(word);
+		}
 	}
 	delete result;
 }
@@ -150,6 +154,18 @@ void WebPage::calcTopK()
 void WebPage::make_summary()
 {
 	_docSummary = _doc.substr(60);
+}
+	
+void WebPage::process_word(string & word)
+{
+	if(3 == get_bytes_size(word[0])) //中文
+		return;
+
+	for(auto & ch : word)
+	{
+		if(std::isupper(ch))
+			ch = std::tolower(ch);	
+	}
 }
 
 } // end of namespace MSE
