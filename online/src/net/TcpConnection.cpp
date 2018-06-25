@@ -51,8 +51,11 @@ std::string TcpConnection::receive()
 void TcpConnection::send(const std::string & msg)
 {
 	sockIO_.writen(msg.c_str(), msg.size());
+	
+	/*为了支持搜索引擎项目客户端浏览器正常显示搜索结果，服务端须主动关闭连接（已经设置了端口重用）*/
+	shutdown(); //关闭连接
+	/*为了支持搜索引擎项目客户端浏览器正常显示搜索结果，服务端须主动关闭连接（已经设置了端口重用）*/
 }
-
 
 void TcpConnection::shutdown()
 {

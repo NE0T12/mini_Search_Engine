@@ -11,7 +11,7 @@
 #include <string>
 using std::string;
 
-namespace SPC
+namespace MSE
 {
 
 class RedisCache

@@ -7,9 +7,9 @@
 #include "../include/RedisCache.h"
 #include "../include/mylog.h"
 
-using namespace SPC;
-			using std::cout;
-			using std::endl;
+using namespace MSE;
+using std::cout;
+using std::endl;
 
 RedisCache::RedisCache(string ip, int port)
 : _redisContext(redisConnect(ip.c_str(), port))

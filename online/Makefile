@@ -4,7 +4,7 @@ SRCS_CPP:= $(wildcard src/net/*.cpp) $(wildcard src/threadpool/*.cpp) $(wildcard
 OCC := $(patsubst %.cc, %.o, $(wildcard src/*.cc)) 
 OCPP := $(patsubst %.cpp, %.o, $(SRCS_CPP))
 OBJS:= $(OCC) $(OCPP)
-LIBS:= -lpthread -llog4cpp -lhiredis
+LIBS:= -lpthread -llog4cpp -lhiredis -ljson
 
 CXX:=g++
 
